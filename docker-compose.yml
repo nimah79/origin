@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+      - influxdb
+    ports:
+      - '3000:3000'
+      - '3030:3030'
+    volumes:
+      - ./:/app/
+    environment:
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=postgres
+    - DB_HOST=postgres
+    - DB_PORT=5432
+    - DB_DATABASE=origin
+    - INFLUXDB_URL=http://influxdb:8086
+    - INFLUXDB_TOKEN=admin:admin
+    - INFLUXDB_ORG=
+    - INFLUXDB_BUCKET=energy/autogen
+    - INFLUXDB_DB=energy
+    - INFLUXDB_ADMIN_USER=admin
+    - INFLUXDB_ADMIN_PASSWORD=admin
+    - INFLUXDB_USER=api
+    - INFLUXDB_USER_PASSWORD=secretpassword
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    ports:
+      - '5432:5432'
+
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./influxdb-local:/var/lib/influxdb
+      - ./influxdb.conf:/etc/influxdb/influxdb.conf
+    environment:
+      - INFLUXDB_DB=db0

@@ -90,6 +90,13 @@ Preview packages are built on a special `preview` branch, this is mostly used as
 
 Install using `yarn add @energyweb/{package}@preview`
 
+## Running using Docker Compose
+
+```
+cp .env.example .env
+docker-compose up
+```
+
 ## Preparation
 
 1. Make sure you are using Node 14.x.x
